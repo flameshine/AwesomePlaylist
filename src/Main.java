@@ -19,13 +19,12 @@ public class Main {
 
         while(play) {
             printMainMenu();
-            System.out.print("Your choice: ");
-            enterSomeIntegerValue();
+            setUserChoice();
 
             switch(userChoice) {
                 case 1:
                     printSearchSongMenu();
-                    enterSomeIntegerValue();
+                    setUserChoice();
                     break;
                 case 2:
                     break;
@@ -53,6 +52,11 @@ public class Main {
 
     private static void congratulationMessage() {
         System.out.println("Welcome to the awesome playlist! You can search and add different songs to your own playlist: ");
+    }
+
+    private static void setUserChoice() {
+        System.out.print("Your choice: ");
+        enterSomeIntegerValue();
     }
 
     private static void enterSomeIntegerValue() {
