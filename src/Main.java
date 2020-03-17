@@ -4,9 +4,8 @@ import Data.DataBase;
 
 public class Main {
 
-    private final DataBase database = new DataBase();
-    private static Scanner input = new Scanner(System.in);
-    private static int userChoice;
+    private static DataBase database = new DataBase();
+    private static Integer userChoice;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -14,7 +13,6 @@ public class Main {
     }
 
     private void printMainData() {
-
         congratulationMessage();
 
         boolean play = true;
@@ -22,11 +20,13 @@ public class Main {
         while(play) {
 
             printMainMenu();
-            setUserChoice();
+            System.out.print("Your choice: ");
+            enterSomeIntegerValue();
 
             switch(userChoice) {
                 case 1:
-                    printSearchSongMenu();
+                    searchSong();
+                    printSearchResult();
                     break;
                 case 2:
                     break;
@@ -35,44 +35,53 @@ public class Main {
                     play = false;
                     break;
                 default:
-                    System.out.println("Incorrect input! Please, restart the program!");
+                    System.out.println("Incorrect input!");
                     break;
             }
         }
     }
 
     private void printMainMenu() {
+        System.out.println();
         System.out.println("1. Search and add song.");
         System.out.println("2. Change your personal account data.");
         System.out.println("3. Exit.");
+        System.out.println();
     }
 
-    private void printSearchSongMenu() {
-        System.out.println("1. Search song by name.");
-        System.out.println("2. Search song by artist.");
+    private void printSearchSongsMenu() {
+        System.out.println();
+        System.out.println("1. Search songs by title.");
+        System.out.println("2. Search songs by artist name.");
+        System.out.println("3. Search songs by title and artist name.");
+        System.out.println();
+    }
 
-        setUserChoice();
+    private void searchSong() {
+        printSearchSongsMenu();
+        System.out.print("Your choice: ");
+        enterSomeIntegerValue();
 
-        switch(userChoice) {
-            case 1:
-                printBaseData(database.selectAllSongsData());
-                setUserChoice();
-                break;
-            case 2:
-                printBaseData(database.selectAllArtistsData());
-                setUserChoice();
-                break;
-            default:
-                System.out.println("Incorrect input! Please, restart the program!");
-                break;
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Please, enter the name of the artist or the name of the song you want to find: ");
+        String userLine = input.nextLine();
+
+        try {
+            database.findSong(userLine, userChoice);
+        } catch(SQLException exception) {
+            exception.printStackTrace();
         }
     }
 
-    private void printBaseData(String source) {
-        try {
-            database.printBaseData(source);
-        } catch(SQLException exception) {
-            exception.printStackTrace();
+    private void printSearchResult() {
+        System.out.println("\nResult: ");
+
+        if(database.getFoundSounds().isEmpty())
+            System.out.println("No such song found!");
+        else {
+            for(Map.Entry entry : database.getFoundSounds().entrySet())
+                System.out.println(entry.getValue() + " - " + entry.getKey());
         }
     }
 
@@ -80,14 +89,9 @@ public class Main {
         System.out.println("Welcome to the awesome playlist! You can search and add different songs to your own playlist: ");
     }
 
-    private void setUserChoice() {
-        System.out.println();
-        System.out.print("Your choice: ");
-        enterSomeIntegerValue();
-        System.out.println();
-    }
-
     private void enterSomeIntegerValue() {
+        Scanner input = new Scanner(System.in);
+
         try {
             userChoice = input.nextInt();
         } catch(InputMismatchException exception) {

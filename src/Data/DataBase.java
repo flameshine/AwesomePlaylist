@@ -1,18 +1,45 @@
 package Data;
 
 import java.sql.*;
-import java.util.Objects;
+import java.util.*;
 
 public class DataBase {
 
-    Connection connection = getConnection();
+    private Connection connection = getConnection();
+    private Map<String, String> foundSounds = new HashMap<>();
 
-    public void printBaseData(String source) throws SQLException {
-        ResultSet result = createResultSet(source);
+    public void findSong(String userLine, Integer userChoice) throws SQLException {
+        ResultSet result = createResultSet(selectAllData());
 
-        while(result.next()) {
-            System.out.println(result.getInt(1) + ". " + result.getString(2) + ". ");
+        foundSounds.clear();
+
+        switch(userChoice) {
+            case 1:
+                while(result.next()) {
+                    if(result.getString(2).contains(userLine))
+                        foundSounds.put(result.getString(2), result.getString(5));
+                }
+                break;
+            case 2:
+                while(result.next()) {
+                    if(result.getString(5).contains(userLine))
+                        foundSounds.put(result.getString(2), result.getString(5));
+                }
+                break;
+            case 3:
+                while(result.next()) {
+                    if(result.getString(2).contains(userLine) || result.getString(5).contains(userLine))
+                        foundSounds.put(result.getString(2), result.getString(5));
+                }
+                break;
+            default:
+                System.out.println("Incorrect input!");
+                break;
         }
+    }
+
+    public Map<String, String> getFoundSounds() {
+        return foundSounds;
     }
 
     private static final String
@@ -40,11 +67,7 @@ public class DataBase {
         return selectedData.executeQuery();
     }
 
-    public String selectAllArtistsData() {
-        return "SELECT * FROM awesomePlaylist.artists";
-    }
-
-    public String selectAllSongsData() {
-        return "SELECT * FROM awesomePlaylist.songs";
+    private String selectAllData() {
+        return "SELECT * FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 }
