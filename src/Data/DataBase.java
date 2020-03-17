@@ -5,11 +5,13 @@ import java.util.Objects;
 
 public class DataBase {
 
-    public void printDataBaseData() throws SQLException {
-        ResultSet result = createResultSet();
+    Connection connection = getConnection();
+
+    public void printBaseData(String source) throws SQLException {
+        ResultSet result = createResultSet(source);
 
         while(result.next()) {
-            //System.out.println(result.getInt(1) + ". " + result.getString(3) + ". ");
+            System.out.println(result.getInt(1) + ". " + result.getString(2) + ". ");
         }
     }
 
@@ -30,17 +32,19 @@ public class DataBase {
         } catch (ClassNotFoundException | SQLException exception) {
             System.out.println(exception);
         }
-
         return null;
     }
 
-    private ResultSet createResultSet() throws SQLException {
-        Connection connection = getConnection();
-        PreparedStatement selectedData = Objects.requireNonNull(connection).prepareStatement(selectAllData());
+    private ResultSet createResultSet(String source) throws SQLException {
+        PreparedStatement selectedData = Objects.requireNonNull(connection).prepareStatement(source);
         return selectedData.executeQuery();
     }
 
-    private String selectAllData() {
+    public String selectAllArtistsData() {
+        return "SELECT * FROM awesomePlaylist.artists";
+    }
+
+    public String selectAllSongsData() {
         return "SELECT * FROM awesomePlaylist.songs";
     }
 }
