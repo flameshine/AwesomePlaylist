@@ -13,23 +13,23 @@ public class DataBase {
 
         foundSounds.clear();
 
-        switch(userChoice) {
+        switch (userChoice) {
             case 1:
-                while(result.next()) {
-                    if(result.getString(2).contains(userLine))
-                        foundSounds.put(result.getString(2), result.getString(5));
+                while (result.next()) {
+                    if (result.getString(1).contains(userLine))
+                        foundSounds.put(result.getString(1), result.getString(2));
                 }
                 break;
             case 2:
-                while(result.next()) {
-                    if(result.getString(5).contains(userLine))
-                        foundSounds.put(result.getString(2), result.getString(5));
+                while (result.next()) {
+                    if (result.getString(2).contains(userLine))
+                        foundSounds.put(result.getString(1), result.getString(2));
                 }
                 break;
             case 3:
-                while(result.next()) {
-                    if(result.getString(2).contains(userLine) || result.getString(5).contains(userLine))
-                        foundSounds.put(result.getString(2), result.getString(5));
+                while (result.next()) {
+                    if (result.getString(1).contains(userLine) || result.getString(2).contains(userLine))
+                        foundSounds.put(result.getString(1), result.getString(2));
                 }
                 break;
             default:
@@ -68,6 +68,6 @@ public class DataBase {
     }
 
     private String selectAllData() {
-        return "SELECT * FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+        return "SELECT name, artistName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 }
