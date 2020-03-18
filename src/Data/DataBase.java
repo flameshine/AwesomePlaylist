@@ -68,6 +68,6 @@ public class DataBase {
     }
 
     private String selectAllData() {
-        return "SELECT name, artistName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+        return "SELECT name, artistName, album, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 }
