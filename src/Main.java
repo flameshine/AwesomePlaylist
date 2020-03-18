@@ -77,11 +77,17 @@ public class Main {
     private void printSearchResult() {
         System.out.println("\nResult: ");
 
-        if(database.getFoundSounds().isEmpty())
+        if(database.getFoundSongTitle().isEmpty())
             System.out.println("No such song found!");
         else {
-            for(Map.Entry entry : database.getFoundSounds().entrySet())
-                System.out.println(entry.getValue() + " - " + entry.getKey());
+            Iterator<String> songTitleIterator = database.getFoundSongTitle().iterator();
+            Iterator<String> songArtistNameIterator = database.getFoundSongArtistName().iterator();
+            Iterator<String> songAlbumNameIterator = database.getFoundSongAlbumName().iterator();
+            Iterator<String> songYearIterator = database.getFoundSongYear().iterator();
+
+            while(songTitleIterator.hasNext() && songArtistNameIterator.hasNext() && songAlbumNameIterator.hasNext() && songYearIterator.hasNext()) {
+                System.out.println(songTitleIterator.next() + "   " + songArtistNameIterator.next() + "   " + songAlbumNameIterator.next() + "   " + songYearIterator.next());
+            }
         }
     }
 

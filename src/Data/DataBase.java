@@ -6,30 +6,33 @@ import java.util.*;
 public class DataBase {
 
     private Connection connection = getConnection();
-    private Map<String, String> foundSounds = new HashMap<>();
+    private List<String> foundSongTitle = new ArrayList<>();
+    private List<String> foundSongArtistName = new ArrayList<>();
+    private List<String> foundSongAlbumName = new ArrayList<>();
+    private List<String> foundSongYear = new ArrayList<>();
 
     public void findSong(String userLine, Integer userChoice) throws SQLException {
         ResultSet result = createResultSet(selectAllData());
 
-        foundSounds.clear();
+        clearAllListData();
 
         switch (userChoice) {
             case 1:
                 while (result.next()) {
                     if (result.getString(1).contains(userLine))
-                        foundSounds.put(result.getString(1), result.getString(2));
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
                 }
                 break;
             case 2:
                 while (result.next()) {
                     if (result.getString(2).contains(userLine))
-                        foundSounds.put(result.getString(1), result.getString(2));
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
                 }
                 break;
             case 3:
                 while (result.next()) {
                     if (result.getString(1).contains(userLine) || result.getString(2).contains(userLine))
-                        foundSounds.put(result.getString(1), result.getString(2));
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
                 }
                 break;
             default:
@@ -38,8 +41,34 @@ public class DataBase {
         }
     }
 
-    public Map<String, String> getFoundSounds() {
-        return foundSounds;
+    public List<String> getFoundSongTitle() {
+        return foundSongTitle;
+    }
+
+    public List<String> getFoundSongArtistName() {
+        return foundSongArtistName;
+    }
+
+    public List<String> getFoundSongAlbumName() {
+        return foundSongAlbumName;
+    }
+
+    public List<String> getFoundSongYear() {
+        return foundSongYear;
+    }
+
+    private void clearAllListData() {
+        foundSongTitle.clear();
+        foundSongArtistName.clear();
+        foundSongAlbumName.clear();
+        foundSongYear.clear();
+    }
+
+    private void putDataToLists(String title, String artistName, String albumName, String year) {
+        foundSongTitle.add(title);
+        foundSongArtistName.add(artistName);
+        foundSongAlbumName.add(albumName);
+        foundSongYear.add(year);
     }
 
     private static final String
@@ -68,6 +97,6 @@ public class DataBase {
     }
 
     private String selectAllData() {
-        return "SELECT name, artistName, album, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+        return "SELECT title, artistName, albumName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 }
