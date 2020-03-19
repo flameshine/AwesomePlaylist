@@ -75,8 +75,6 @@ public class Main {
     }
 
     private void printSearchResult() {
-        System.out.println("\nResult: ");
-
         if(database.getFoundSongTitle().isEmpty())
             System.out.println("No such song found!");
         else {
@@ -85,8 +83,13 @@ public class Main {
             Iterator<String> songAlbumNameIterator = database.getFoundSongAlbumName().iterator();
             Iterator<String> songYearIterator = database.getFoundSongYear().iterator();
 
+            System.out.println();
+            System.out.printf("%-20s %-20s %-20s %-20s", "Title:", "Artist:", "Album:", "Year:");
+            System.out.println();
+
             while(songTitleIterator.hasNext() && songArtistNameIterator.hasNext() && songAlbumNameIterator.hasNext() && songYearIterator.hasNext()) {
-                System.out.println(songTitleIterator.next() + "   " + songArtistNameIterator.next() + "   " + songAlbumNameIterator.next() + "   " + songYearIterator.next());
+                System.out.printf("%-20s %-20s %-20s %-20s", songTitleIterator.next(), songArtistNameIterator.next(), songAlbumNameIterator.next(), songYearIterator.next());
+                System.out.println();
             }
         }
     }
