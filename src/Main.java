@@ -27,10 +27,13 @@ public class Main {
                 case 1:
                     searchSong();
                     printSearchResult();
+                    addSongToUserPlaylist();
                     break;
                 case 2:
                     break;
                 case 3:
+                    break;
+                case 4:
                     System.out.println("Good Luck! Your data are saved!");
                     play = false;
                     break;
@@ -44,8 +47,9 @@ public class Main {
     private void printMainMenu() {
         System.out.println();
         System.out.println("1. Search and add song.");
-        System.out.println("2. Change your personal account data.");
-        System.out.println("3. Exit.");
+        System.out.println("2. View my playlist.");
+        System.out.println("3. Change your personal account data.");
+        System.out.println("4. Exit.");
         System.out.println();
     }
 
@@ -84,14 +88,32 @@ public class Main {
             Iterator<String> songYearIterator = database.getFoundSongYear().iterator();
 
             System.out.println();
-            System.out.printf("%-20s %-20s %-20s %-20s", "Title:", "Artist:", "Album:", "Year:");
+            System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
             System.out.println();
 
+            Integer counter = 1;
+
             while(songTitleIterator.hasNext() && songArtistNameIterator.hasNext() && songAlbumNameIterator.hasNext() && songYearIterator.hasNext()) {
-                System.out.printf("%-20s %-20s %-20s %-20s", songTitleIterator.next(), songArtistNameIterator.next(), songAlbumNameIterator.next(), songYearIterator.next());
+                System.out.printf("%-5s %-25s %-25s %-25s %-25s", counter + ". ", songTitleIterator.next(), songArtistNameIterator.next(), songAlbumNameIterator.next(), songYearIterator.next());
                 System.out.println();
+                ++counter;
             }
         }
+    }
+
+    private void addSongToUserPlaylist() {
+        System.out.println();
+        System.out.print("Please, enter the id of song you want to add: ");
+        enterSomeIntegerValue();
+
+        try {
+            database.addDataToPlaylist(userChoice);
+        } catch(SQLException exception) {
+            exception.printStackTrace();
+        }
+
+        System.out.println();
+        System.out.println("The song has been successfully added to your playlist!");
     }
 
     private void congratulationMessage() {

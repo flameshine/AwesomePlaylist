@@ -41,6 +41,14 @@ public class DataBase {
         }
     }
 
+    public void addDataToPlaylist(Integer userChoice) throws SQLException {
+        --userChoice;
+        Integer counter = 1;
+
+        createStatement().executeUpdate(createPlaylist());
+        createStatement().executeUpdate(addSongToUserPlaylist(counter, foundSongTitle.get(userChoice), foundSongArtistName.get(userChoice), foundSongAlbumName.get(userChoice), foundSongYear.get(userChoice)));
+    }
+
     public List<String> getFoundSongTitle() {
         return foundSongTitle;
     }
@@ -96,7 +104,19 @@ public class DataBase {
         return selectedData.executeQuery();
     }
 
+    private Statement createStatement() throws SQLException {
+        return connection.createStatement();
+    }
+
     private String selectAllData() {
         return "SELECT title, artistName, albumName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+    }
+
+    private String createPlaylist() {
+        return "CREATE TABLE IF NOT EXISTS `awesomePlaylist`.`userPlaylist` (`ID` INT NOT NULL, `title` VARCHAR(50) NOT NULL, `artistName` VARCHAR(50) NOT NULL, `albumName` VARCHAR(50) NOT NULL, `year` VARCHAR(50) NOT NULL, PRIMARY KEY (`ID`))";
+    }
+
+    private String addSongToUserPlaylist(Integer id, String title, String artistName, String albumName, String year) {
+        return "INSERT INTO awesomePlaylist.userPlaylist VALUES (" + id + ", '" + title + "', '" + artistName + "', '" + albumName + "', " + year + ")";
     }
 }
