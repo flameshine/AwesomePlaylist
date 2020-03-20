@@ -1,38 +1,40 @@
 package Data;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.*;
 import java.util.*;
 
 public class DataBase {
 
     private Connection connection = getConnection();
-    private List<String> foundSongTitle = new ArrayList<>();
-    private List<String> foundSongArtistName = new ArrayList<>();
-    private List<String> foundSongAlbumName = new ArrayList<>();
-    private List<String> foundSongYear = new ArrayList<>();
+
+    private List<String> songIds = new ArrayList<>();
+    private List<String> songTitles = new ArrayList<>();
+    private List<String> songArtistNames = new ArrayList<>();
+    private List<String> songAlbumNames = new ArrayList<>();
+    private List<String> songYears = new ArrayList<>();
 
     public void findSong(String userLine, Integer userChoice) throws SQLException {
         ResultSet result = createResultSet(selectAllData());
 
-        clearAllListData();
-
         switch (userChoice) {
             case 1:
                 while (result.next()) {
-                    if (result.getString(1).contains(userLine))
-                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
+                    if (result.getString(2).contains(userLine))
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
                 }
                 break;
             case 2:
                 while (result.next()) {
-                    if (result.getString(2).contains(userLine))
-                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
+                    if (result.getString(3).contains(userLine))
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
                 }
                 break;
             case 3:
                 while (result.next()) {
-                    if (result.getString(1).contains(userLine) || result.getString(2).contains(userLine))
-                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
+                    if (result.getString(2).contains(userLine) || result.getString(3).contains(userLine))
+                        putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
                 }
                 break;
             default:
@@ -41,42 +43,54 @@ public class DataBase {
         }
     }
 
-    public void addDataToPlaylist(Integer userChoice) throws SQLException {
-        --userChoice;
-        Integer counter = 1;
-
+    public void addSongToPlaylist(Integer userChoice) throws SQLException {
         createStatement().executeUpdate(createPlaylist());
-        createStatement().executeUpdate(addSongToUserPlaylist(counter, foundSongTitle.get(userChoice), foundSongArtistName.get(userChoice), foundSongAlbumName.get(userChoice), foundSongYear.get(userChoice)));
+        createStatement().executeUpdate(addSongToUserPlaylist(userChoice));
+        putUserPlaylistDataToLists();
     }
 
-    public List<String> getFoundSongTitle() {
-        return foundSongTitle;
+    private void putUserPlaylistDataToLists() throws SQLException {
+        ResultSet result = createResultSet(selectDataFromUserPlaylist());
+
+        while(result.next()) {
+            putDataToLists(result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
+        }
     }
 
-    public List<String> getFoundSongArtistName() {
-        return foundSongArtistName;
+    public List<String> getSongIds() {
+        return songIds;
     }
 
-    public List<String> getFoundSongAlbumName() {
-        return foundSongAlbumName;
+    public List<String> getSongTitles() {
+        return songTitles;
     }
 
-    public List<String> getFoundSongYear() {
-        return foundSongYear;
+    public List<String> getSongArtistNames() {
+        return songArtistNames;
     }
 
-    private void clearAllListData() {
-        foundSongTitle.clear();
-        foundSongArtistName.clear();
-        foundSongAlbumName.clear();
-        foundSongYear.clear();
+    public List<String> getSongAlbumNames() {
+        return songAlbumNames;
     }
 
-    private void putDataToLists(String title, String artistName, String albumName, String year) {
-        foundSongTitle.add(title);
-        foundSongArtistName.add(artistName);
-        foundSongAlbumName.add(albumName);
-        foundSongYear.add(year);
+    public List<String> getSongYears() {
+        return songYears;
+    }
+
+    public void clearAllListData() {
+        songIds.clear();
+        songTitles.clear();
+        songArtistNames.clear();
+        songAlbumNames.clear();
+        songYears.clear();
+    }
+
+    private void putDataToLists(String id, String title, String artistName, String albumName, String year) {
+        songIds.add(id);
+        songTitles.add(title);
+        songArtistNames.add(artistName);
+        songAlbumNames.add(albumName);
+        songYears.add(year);
     }
 
     private static final String
@@ -108,15 +122,23 @@ public class DataBase {
         return connection.createStatement();
     }
 
+    @NotNull
     private String selectAllData() {
-        return "SELECT title, artistName, albumName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+        return "SELECT awesomePlaylist.songs.ID, title, artistName, albumName, year FROM awesomePlaylist.songs LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 
+    @NotNull
     private String createPlaylist() {
-        return "CREATE TABLE IF NOT EXISTS `awesomePlaylist`.`userPlaylist` (`ID` INT NOT NULL, `title` VARCHAR(50) NOT NULL, `artistName` VARCHAR(50) NOT NULL, `albumName` VARCHAR(50) NOT NULL, `year` VARCHAR(50) NOT NULL, PRIMARY KEY (`ID`))";
+        return "CREATE TABLE IF NOT EXISTS `awesomePlaylist`.`userPlaylist` (`ID` INT NOT NULL AUTO_INCREMENT, `songID` INT NOT NULL, INDEX `songID_idx` (`songID` ASC) VISIBLE, INDEX `ID` (`ID` ASC) VISIBLE, CONSTRAINT `songID` FOREIGN KEY (`songID`) REFERENCES `awesomePlaylist`.`songs` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE)";
     }
 
-    private String addSongToUserPlaylist(Integer id, String title, String artistName, String albumName, String year) {
-        return "INSERT INTO awesomePlaylist.userPlaylist VALUES (" + id + ", '" + title + "', '" + artistName + "', '" + albumName + "', " + year + ")";
+    @NotNull
+    private String addSongToUserPlaylist(Integer userChoice) {
+        return "INSERT INTO awesomePlaylist.userPlaylist VALUES (NULL, " + userChoice + ")";
+    }
+
+    @NotNull
+    private String selectDataFromUserPlaylist() {
+        return "SELECT awesomePlaylist.userPlaylist.ID, title, artistName, albumName, year FROM awesomePlaylist.userPlaylist LEFT JOIN awesomePlaylist.songs ON (awesomePlaylist.userPlaylist.songID = awesomePlaylist.songs.ID) LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 }

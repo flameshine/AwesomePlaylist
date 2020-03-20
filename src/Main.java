@@ -26,10 +26,11 @@ public class Main {
             switch(userChoice) {
                 case 1:
                     searchSong();
-                    printSearchResult();
+                    printResult();
                     addSongToUserPlaylist();
                     break;
                 case 2:
+                    printUserPlaylistData();
                     break;
                 case 3:
                     break;
@@ -78,26 +79,36 @@ public class Main {
         }
     }
 
-    private void printSearchResult() {
-        if(database.getFoundSongTitle().isEmpty())
+    private void printResult() {
+        if(database.getSongIds().isEmpty())
             System.out.println("No such song found!");
         else {
-            Iterator<String> songTitleIterator = database.getFoundSongTitle().iterator();
-            Iterator<String> songArtistNameIterator = database.getFoundSongArtistName().iterator();
-            Iterator<String> songAlbumNameIterator = database.getFoundSongAlbumName().iterator();
-            Iterator<String> songYearIterator = database.getFoundSongYear().iterator();
+            printResultData();
+            database.clearAllListData();
+        }
+    }
 
+    private void printUserPlaylistData() {
+        if(database.getSongIds().isEmpty())
+            System.out.println("Your playlist is empty!");
+        else
+            printResult();
+    }
+
+    private void printResultData() {
+        Iterator<String> songIdIterator = database.getSongIds().iterator();
+        Iterator<String> songTitleIterator = database.getSongTitles().iterator();
+        Iterator<String> songArtistNameIterator = database.getSongArtistNames().iterator();
+        Iterator<String> songAlbumNameIterator = database.getSongAlbumNames().iterator();
+        Iterator<String> songYearIterator = database.getSongYears().iterator();
+
+        System.out.println();
+        System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
+        System.out.println();
+
+        while(songTitleIterator.hasNext() && songArtistNameIterator.hasNext() && songAlbumNameIterator.hasNext() && songYearIterator.hasNext()) {
+            System.out.printf("%-5s %-25s %-25s %-25s %-25s", songIdIterator.next() + ". ", songTitleIterator.next(), songArtistNameIterator.next(), songAlbumNameIterator.next(), songYearIterator.next());
             System.out.println();
-            System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
-            System.out.println();
-
-            Integer counter = 1;
-
-            while(songTitleIterator.hasNext() && songArtistNameIterator.hasNext() && songAlbumNameIterator.hasNext() && songYearIterator.hasNext()) {
-                System.out.printf("%-5s %-25s %-25s %-25s %-25s", counter + ". ", songTitleIterator.next(), songArtistNameIterator.next(), songAlbumNameIterator.next(), songYearIterator.next());
-                System.out.println();
-                ++counter;
-            }
         }
     }
 
@@ -107,7 +118,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            database.addDataToPlaylist(userChoice);
+            database.addSongToPlaylist(userChoice);
         } catch(SQLException exception) {
             exception.printStackTrace();
         }
