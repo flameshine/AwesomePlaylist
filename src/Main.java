@@ -1,6 +1,6 @@
 import java.util.*;
 import java.sql.*;
-import Data.DataBase;
+import DataBase.DataBase;
 
 public class Main {
 

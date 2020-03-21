@@ -1,26 +1,27 @@
 //data-class
 
-package Data;
+package DataClasses;
 
 public class Song {
+
     private String title;
     private String artistName;
     private String albumName;
     private String year;
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getArtistName() {
-        return artistName;
+        return this.artistName;
     }
 
     public String getAlbumName() {
-        return albumName;
+        return this.albumName;
     }
 
     public String getYear() {
-        return year;
+        return this.year;
     }
 }
