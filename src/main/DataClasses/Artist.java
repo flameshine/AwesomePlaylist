@@ -1,12 +1,12 @@
 //data-class
 
-package DataClasses;
+package main.DataClasses;
 
 public class Artist {
 
     private String name;
 
     public String getName() {
-        return this.name;
+        return name;
     }
 }
