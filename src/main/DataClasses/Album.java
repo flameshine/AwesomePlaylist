@@ -1,6 +1,6 @@
 //data-class
 
-package DataClasses;
+package main.DataClasses;
 
 public class Album {
 

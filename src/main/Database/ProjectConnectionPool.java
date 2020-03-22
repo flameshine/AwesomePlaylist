@@ -22,12 +22,10 @@ public class ProjectConnectionPool {
     public Connection getConnection() {
         Connection connection = null;
 
-        if (connection == null) {
-            try {
-                connection = createConnection();
-            } catch (ClassNotFoundException | SQLException exception) {
-                System.out.println(exception);
-            }
+        try {
+            connection = createConnection();
+        } catch (ClassNotFoundException | SQLException exception) {
+            System.out.println(exception);
         }
 
         return connection;
@@ -46,13 +44,4 @@ public class ProjectConnectionPool {
         Class.forName(DRIVER);
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-
-    /*private void closeConnection(Connection connection) {
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

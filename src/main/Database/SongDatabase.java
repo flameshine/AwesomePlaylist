@@ -1,7 +1,6 @@
 package main.Database;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +23,10 @@ public class SongDatabase {
                 songs = songs.stream().filter(s -> s.getArtistName().contains(userLine)).collect(Collectors.toList());
                 break;
             case 3:
-                songs = songs.stream().filter(s -> s.getTitle().contains(userLine) || s.getArtistName().contains(userLine)).collect(Collectors.toList());
+                songs = songs.stream().filter(s -> s.getAlbumName().contains(userLine)).collect(Collectors.toList());
+                break;
+            case 4:
+                songs = songs.stream().filter(s -> s.getYear().contains(userLine)).collect(Collectors.toList());
                 break;
             default:
                 System.out.println("Incorrect input!");
@@ -39,10 +41,10 @@ public class SongDatabase {
     public void addSongToPlaylist(Integer userChoice) throws SQLException {
         createStatement().executeUpdate(createPlaylist());
         createStatement().executeUpdate(addSongToUserPlaylist(userChoice));
-        putUserPlaylistDataToLists();
+        putUserPlaylistDataToList();
     }
 
-    private void putUserPlaylistDataToLists() throws SQLException {
+    private void putUserPlaylistDataToList() throws SQLException {
         ResultSet result = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylist());
 
         while(result.next()) {

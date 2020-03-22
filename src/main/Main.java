@@ -61,7 +61,8 @@ public class Main {
         System.out.println();
         System.out.println("1. Search songs by title.");
         System.out.println("2. Search songs by artist name.");
-        System.out.println("3. Search songs by title and artist name.");
+        System.out.println("3. Search songs by album name.");
+        System.out.println("4. Search songs by year of release.");
         System.out.println();
     }
 
