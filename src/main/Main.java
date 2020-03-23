@@ -74,7 +74,7 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.print("Please, enter the name of the artist or the name of the song you want to find: ");
+        System.out.print("Please, enter your request: ");
         String userLine = input.nextLine();
 
         try {

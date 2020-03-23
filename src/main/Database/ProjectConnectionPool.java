@@ -13,7 +13,7 @@ public class ProjectConnectionPool {
             USER = "root",
             PASSWORD = "toortoor";
 
-    public static ProjectConnectionPool getInstance() {
+    public static synchronized ProjectConnectionPool getInstance() {
         if(instance == null)
             instance = new ProjectConnectionPool();
         return instance;
