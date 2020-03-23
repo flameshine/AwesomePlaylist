@@ -10,42 +10,42 @@ public class SongDatabase {
 
     private List<Song> songs = new ArrayList<>();
 
-    public void findSong(String userLine, Integer userChoice) throws SQLException {
+    private final int TITLE = 1;
+    private final int ARTIST = 2;
+    private final int ALBUM = 3;
+    private final int YEAR = 4;
+
+    public List<Song> findSong(String userLine, Integer userChoice) throws SQLException {
         ResultSet result = ProjectConnectionPool.getInstance().createResultSet(selectAllData());
 
+        songs.clear();
         songs = setSongList(result);
 
         switch(userChoice) {
-            case 1:
-                songs = songs.stream().filter(s -> s.getTitle().contains(userLine)).collect(Collectors.toList());
-                break;
-            case 2:
-                songs = songs.stream().filter(s -> s.getArtistName().contains(userLine)).collect(Collectors.toList());
-                break;
-            case 3:
-                songs = songs.stream().filter(s -> s.getAlbumName().contains(userLine)).collect(Collectors.toList());
-                break;
-            case 4:
-                songs = songs.stream().filter(s -> s.getYear().contains(userLine)).collect(Collectors.toList());
-                break;
+            case TITLE:
+                return songs.stream().filter(s -> s.getTitle().contains(userLine)).collect(Collectors.toList());
+            case ARTIST:
+                return songs.stream().filter(s -> s.getArtistName().contains(userLine)).collect(Collectors.toList());
+            case ALBUM:
+                return songs.stream().filter(s -> s.getAlbumName().contains(userLine)).collect(Collectors.toList());
+            case YEAR:
+                return songs.stream().filter(s -> s.getYear().contains(userLine)).collect(Collectors.toList());
             default:
-                System.out.println("Incorrect input!");
-                break;
+                throw new RuntimeException("Incorrect input!");
         }
     }
 
-    public List<Song> getSongs() {
+    public List<Song> addSongToPlaylist(Integer userChoice) throws SQLException {
+        createStatement().executeUpdate(createPlaylist());
+        createStatement().executeUpdate(addSongToUserPlaylist(userChoice));
+        putResultToList();
         return songs;
     }
 
-    public void addSongToPlaylist(Integer userChoice) throws SQLException {
-        createStatement().executeUpdate(createPlaylist());
-        createStatement().executeUpdate(addSongToUserPlaylist(userChoice));
-        putUserPlaylistDataToList();
-    }
-
-    private void putUserPlaylistDataToList() throws SQLException {
+    private void putResultToList() throws SQLException {
         ResultSet result = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylist());
+
+        songs.clear();
 
         while(result.next()) {
             Song song = new Song(result.getInt(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));

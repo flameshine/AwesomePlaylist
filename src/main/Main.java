@@ -7,6 +7,7 @@ import main.Database.SongDatabase;
 
 public class Main {
 
+    private static List<Song> songs = new ArrayList<>();
     private static SongDatabase songDatabase = new SongDatabase();
     private static Integer userChoice;
 
@@ -77,38 +78,35 @@ public class Main {
         String userLine = input.nextLine();
 
         try {
-            songDatabase.findSong(userLine, userChoice);
+            songs = songDatabase.findSong(userLine, userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
 
     private void printResult() {
-        if(songDatabase.getSongs().isEmpty())
+        if(songs.isEmpty())
             System.out.println("No such song found!");
-        else {
+        else
             printResultData();
-            songDatabase.getSongs().clear();
-        }
     }
 
     private void printUserPlaylistData() {
-        if(songDatabase.getSongs().isEmpty())
+        if(songs.isEmpty())
             System.out.println("Your playlist is empty!");
         else
             printResult();
     }
 
     private void printResultData() {
-        Iterator<Song> songIterator = songDatabase.getSongs().iterator();
+        Iterator<Song> songIterator = songs.iterator();
 
         System.out.println();
         System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
         System.out.println();
 
-        while(songIterator.hasNext()) {
+        while(songIterator.hasNext())
             songIterator.next().printSong();
-        }
     }
 
     private void addSongToUserPlaylist() {
@@ -117,7 +115,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songDatabase.addSongToPlaylist(userChoice);
+            songs = songDatabase.addSongToPlaylist(userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
