@@ -9,6 +9,7 @@ public class Main {
 
     private static List<Song> songs = new ArrayList<>();
     private static SongDatabase songDatabase = new SongDatabase();
+    private static String username, password;
     private static Integer userChoice;
 
     public static void main(String[] args) {
@@ -18,7 +19,22 @@ public class Main {
 
     private void printMainData() {
         congratulationMessage();
-        setRegistrationData();
+
+        printStartMenu();
+        System.out.print("Your choice: ");
+        enterSomeIntegerValue();
+
+        switch(userChoice) {
+            case 1:
+                setRegistrationData();
+                break;
+            case 2:
+                setLoginData();
+                break;
+            default:
+                System.out.println("Incorrect input!");
+                break;
+        }
 
         boolean play = true;
 
@@ -38,8 +54,6 @@ public class Main {
                     printUserPlaylistData();
                     break;
                 case 3:
-                    break;
-                case 4:
                     System.out.println("Good Luck! Your data are saved!");
                     play = false;
                     break;
@@ -53,20 +67,23 @@ public class Main {
     private void setRegistrationData() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Please, register your account: ");
-        System.out.print("Enter your username: ");
-        String username = input.nextLine();
-        System.out.print("Enter your password: ");
-        String firstPasswordAttempt = input.nextLine();
-        System.out.print("Confirm your password: ");
-        String secondPasswordAttempt = input.nextLine();
+        while(true) {
+            System.out.println("Please, register your account: ");
+            System.out.print("Enter your username: ");
+            username = input.nextLine();
+            System.out.print("Enter your password: ");
+            String firstPasswordAttempt = input.nextLine();
+            System.out.print("Confirm your password: ");
+            String secondPasswordAttempt = input.nextLine();
 
-        if(secondPasswordAttempt.equals(firstPasswordAttempt)) {
-            System.out.println("Congratulations, your account has been created successfully!");
-            addUserToRegistrationTable(username, firstPasswordAttempt);
+            if(secondPasswordAttempt.equals(firstPasswordAttempt)) {
+                System.out.println("Congratulations, your account has been created successfully!");
+                addUserToRegistrationTable(username, firstPasswordAttempt);
+                break;
+            }
+            else
+                System.out.println("\nSorry, passwords don't match!\n");
         }
-        else
-            throw new RuntimeException("Sorry, passwords don't match! Please restart the program!");
     }
 
     private void addUserToRegistrationTable(String username, String password) {
@@ -74,16 +91,48 @@ public class Main {
             songDatabase.createRegistrationTable();
             songDatabase.addUserToRegistrationTable(username, password);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            exception.printStackTrace(System.out);
+        } catch (RuntimeException exception) {
+            System.out.println("Sorry, passwords don't match! Please restart the program!");
         }
+    }
+
+    private void setLoginData() {
+        Scanner input = new Scanner(System.in);
+
+        while(true) {
+            System.out.println("Please, log in to your account: ");
+            System.out.print("Enter your username: ");
+            username = input.nextLine();
+            System.out.print("Enter your password: ");
+            password = input.nextLine();
+
+            try {
+                if(songDatabase.checkUser(username, password)) {
+                    System.out.println("Authorization completed successfully!");
+                    songs = songDatabase.restoreUserData(username);
+                    break;
+                }
+                else
+                    System.out.println("Incorrect login or password!");
+            } catch (SQLException exception) {
+                exception.printStackTrace(System.out);
+            }
+        }
+    }
+
+    private void printStartMenu() {
+        System.out.println();
+        System.out.println("1. Create an account.");
+        System.out.println("2. Log into an existing account.");
+        System.out.println();
     }
 
     private void printMainMenu() {
         System.out.println();
         System.out.println("1. Search and add song.");
         System.out.println("2. View my playlist.");
-        System.out.println("3. Change your personal account data.");
-        System.out.println("4. Exit.");
+        System.out.println("3. Exit.");
         System.out.println();
     }
 
@@ -107,9 +156,11 @@ public class Main {
         String userLine = input.nextLine();
 
         try {
-            songs = songDatabase.findSong(userLine, userChoice);
+            songs = songDatabase.searchSong(userLine, userChoice);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            exception.printStackTrace(System.out);
+        } catch (RuntimeException exception) {
+            System.out.println("Incorrect input!");
         }
     }
 
@@ -144,7 +195,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.addSongToPlaylist(userChoice);
+            songs = songDatabase.addSongToPlaylist(username, userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
