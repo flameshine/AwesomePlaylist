@@ -2,15 +2,13 @@ package main;
 
 import java.util.*;
 import java.sql.*;
-import main.Database.SongDatabase;
-import main.Database.UserDatabase;
 import main.DataClasses.Song;
+import main.Database.SongDatabase;
 
 public class Main {
 
     private static List<Song> songs = new ArrayList<>();
     private static SongDatabase songDatabase = new SongDatabase();
-    private static UserDatabase userDatabase = new UserDatabase();
     private static String username, password;
     private static Integer userChoice;
 
@@ -78,24 +76,25 @@ public class Main {
             System.out.print("Confirm your password: ");
             String secondPasswordAttempt = input.nextLine();
 
-            if(secondPasswordAttempt.equals(firstPasswordAttempt)) {
-                System.out.println("Congratulations, your account has been created successfully!");
-                addUserToRegistrationTable(username, firstPasswordAttempt);
-                break;
+            try {
+                if (secondPasswordAttempt.equals(firstPasswordAttempt)) {
+                    addUserToRegistrationTable(username, firstPasswordAttempt);
+                    System.out.println("\nCongratulations, your account has been created successfully!\n");
+                    break;
+                } else
+                    System.out.println("\nSorry, passwords don't match!\n");
+            } catch (RuntimeException exception) {
+                System.out.println("\nThis username is already exists! Please, choose another one!\n");
             }
-            else
-                System.out.println("\nSorry, passwords don't match!\n");
         }
     }
 
     private void addUserToRegistrationTable(String username, String password) {
         try {
-            userDatabase.createRegistrationTable();
-            userDatabase.addUserToRegistrationTable(username, password);
+            songDatabase.createRegistrationTable();
+            songDatabase.addUserToRegistrationTable(username, password);
         } catch (SQLException exception) {
             exception.printStackTrace(System.out);
-        } catch (RuntimeException exception) {
-            System.out.println("Sorry, passwords don't match! Please restart the program!");
         }
     }
 
@@ -110,13 +109,13 @@ public class Main {
             password = input.nextLine();
 
             try {
-                if(userDatabase.checkUser(username, password)) {
-                    System.out.println("Authorization completed successfully!");
+                if(songDatabase.checkUser(username, password)) {
                     songs = songDatabase.restoreUserData(username);
+                    System.out.println("\nAuthorization completed successfully!\n");
                     break;
                 }
                 else
-                    System.out.println("Incorrect login or password!");
+                    System.out.println("\nIncorrect login or password!\n");
             } catch (SQLException exception) {
                 exception.printStackTrace(System.out);
             }
@@ -197,7 +196,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = userDatabase.addSongToUserPlaylist(username, userChoice);
+            songs = songDatabase.addSongToPlaylist(username, userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
