@@ -18,6 +18,7 @@ public class Main {
 
     private void printMainData() {
         congratulationMessage();
+        setRegistrationData();
 
         boolean play = true;
 
@@ -46,6 +47,34 @@ public class Main {
                     System.out.println("Incorrect input!");
                     break;
             }
+        }
+    }
+
+    private void setRegistrationData() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Please, register your account: ");
+        System.out.print("Enter your username: ");
+        String username = input.nextLine();
+        System.out.print("Enter your password: ");
+        String firstPasswordAttempt = input.nextLine();
+        System.out.print("Confirm your password: ");
+        String secondPasswordAttempt = input.nextLine();
+
+        if(secondPasswordAttempt.equals(firstPasswordAttempt)) {
+            System.out.println("Congratulations, your account has been created successfully!");
+            addUserToRegistrationTable(username, firstPasswordAttempt);
+        }
+        else
+            throw new RuntimeException("Sorry, passwords don't match! Please restart the program!");
+    }
+
+    private void addUserToRegistrationTable(String username, String password) {
+        try {
+            songDatabase.createRegistrationTable();
+            songDatabase.addUserToRegistrationTable(username, password);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -125,7 +154,7 @@ public class Main {
     }
 
     private void congratulationMessage() {
-        System.out.println("Welcome to the awesome playlist! You can search and add different songs to your own playlist: ");
+        System.out.println("Welcome to the awesome playlist! You can easily search and add different songs to your own playlist!");
     }
 
     private void enterSomeIntegerValue() {

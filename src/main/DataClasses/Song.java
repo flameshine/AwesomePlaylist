@@ -1,5 +1,3 @@
-//data-class
-
 package main.DataClasses;
 
 public class Song {
