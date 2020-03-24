@@ -2,13 +2,15 @@ package main;
 
 import java.util.*;
 import java.sql.*;
-import main.DataClasses.Song;
 import main.Database.SongDatabase;
+import main.Database.UserDatabase;
+import main.DataClasses.Song;
 
 public class Main {
 
     private static List<Song> songs = new ArrayList<>();
     private static SongDatabase songDatabase = new SongDatabase();
+    private static UserDatabase userDatabase = new UserDatabase();
     private static String username, password;
     private static Integer userChoice;
 
@@ -88,8 +90,8 @@ public class Main {
 
     private void addUserToRegistrationTable(String username, String password) {
         try {
-            songDatabase.createRegistrationTable();
-            songDatabase.addUserToRegistrationTable(username, password);
+            userDatabase.createRegistrationTable();
+            userDatabase.addUserToRegistrationTable(username, password);
         } catch (SQLException exception) {
             exception.printStackTrace(System.out);
         } catch (RuntimeException exception) {
@@ -108,7 +110,7 @@ public class Main {
             password = input.nextLine();
 
             try {
-                if(songDatabase.checkUser(username, password)) {
+                if(userDatabase.checkUser(username, password)) {
                     System.out.println("Authorization completed successfully!");
                     songs = songDatabase.restoreUserData(username);
                     break;
@@ -195,7 +197,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.addSongToPlaylist(username, userChoice);
+            songs = userDatabase.addSongToUserPlaylist(username, userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
