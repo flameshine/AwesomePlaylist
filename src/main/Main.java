@@ -46,9 +46,7 @@ public class Main {
 
             switch(userChoice) {
                 case 1:
-                    searchSong();
-                    printResult();
-                    addSongToUserPlaylist();
+                    searchAndAddSong();
                     break;
                 case 2:
                     printUserPlaylistData();
@@ -146,37 +144,41 @@ public class Main {
         System.out.println();
     }
 
-    private void searchSong() {
+    private void searchAndAddSong() {
         printSearchSongsMenu();
         System.out.print("Your choice: ");
         enterSomeIntegerValue();
 
         Scanner input = new Scanner(System.in);
 
-        System.out.print("Please, enter your request: ");
-        String userLine = input.nextLine();
+        while(true) {
+            System.out.print("Please, enter your request: ");
+            String userLine = input.nextLine();
 
-        try {
-            songs = songDatabase.searchSong(userLine, userChoice);
-        } catch (SQLException exception) {
-            exception.printStackTrace(System.out);
-        } catch (RuntimeException exception) {
-            System.out.println("Incorrect input!");
+            try {
+                songs = songDatabase.searchSong(userLine, userChoice);
+            } catch (SQLException exception) {
+                exception.printStackTrace(System.out);
+            } catch (RuntimeException exception) {
+                System.out.println("Incorrect input!");
+            }
+
+            if(!songs.isEmpty()) {
+                printResultData();
+                break;
+            }
+            else
+                System.out.println("No such song found!");
         }
-    }
 
-    private void printResult() {
-        if(songs.isEmpty())
-            System.out.println("No such song found!");
-        else
-            printResultData();
+        addSongToUserPlaylist();
     }
 
     private void printUserPlaylistData() {
         if(songs.isEmpty())
             System.out.println("Your playlist is empty!");
         else
-            printResult();
+            printResultData();
     }
 
     private void printResultData() {
@@ -196,7 +198,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.addSongToPlaylist(username, userChoice);
+            songs = songDatabase.addSongToPlaylist(userChoice);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

@@ -9,6 +9,7 @@ import main.DataClasses.Song;
 public class SongDatabase {
 
     private List<Song> songs = new ArrayList<>();
+    private static int userId = 0;
 
     private final int TITLE = 1;
     private final int ARTIST = 2;
@@ -20,15 +21,21 @@ public class SongDatabase {
     }
 
     public void addUserToRegistrationTable(String username, String password) throws SQLException {
-        ResultSet checkResultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromRegistrationTable());
+        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromRegistrationTable());
 
-        while(checkResultSet.next()) {
-            if(checkResultSet.getString(2).equals(username))
+        while(resultSet.next()) {
+            if(resultSet.getString(2).equals(username))
                 throw new RuntimeException();
         }
 
         createStatement().executeUpdate(addUserToRegistrationTableSQL(username, password));
-        createStatement().executeUpdate(createUserPlaylistSQL(username));
+        createUserPlaylist(username);
+    }
+
+    public void createUserPlaylist(String username) throws SQLException {
+        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromRegistrationTable());
+        setUser(username);
+        createStatement().executeUpdate(createUserPlaylistSQL());
     }
 
     public boolean checkUser(String username, String password) throws SQLException {
@@ -39,7 +46,8 @@ public class SongDatabase {
     }
 
     public List<Song> restoreUserData(String username) throws SQLException {
-        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylistSQL(username));
+        setUser(username);
+        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylistSQL());
 
         songs.clear();
         songs = setSongList(resultSet);
@@ -67,14 +75,23 @@ public class SongDatabase {
         }
     }
 
-    public List<Song> addSongToPlaylist(String username, Integer userChoice) throws SQLException {
-        createStatement().executeUpdate(addSongToUserPlaylistSQL(username, userChoice));
-        putResultToList(username);
+    public List<Song> addSongToPlaylist(Integer userChoice) throws SQLException {
+        createStatement().executeUpdate(addSongToUserPlaylistSQL(userChoice));
+        putResultToList();
         return songs;
     }
 
-    private void putResultToList(String username) throws SQLException {
-        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylistSQL(username));
+    private void setUser(String username) throws SQLException {
+        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromRegistrationTable());
+
+        while(resultSet.next()) {
+            if(resultSet.getString(2).equals(username))
+                userId = resultSet.getInt(1);
+        }
+    }
+
+    private void putResultToList() throws SQLException {
+        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromUserPlaylistSQL());
 
         songs.clear();
 
@@ -117,18 +134,18 @@ public class SongDatabase {
     }
 
     @NotNull
-    private String createUserPlaylistSQL(String username) {
-        return "CREATE TABLE IF NOT EXISTS `awesomePlaylist`.`" + username + "` (`ID` INT NOT NULL AUTO_INCREMENT, `" + username + "SongID` INT NOT NULL, INDEX `songID_idx` (`" + username + "SongID` ASC) VISIBLE, INDEX `ID` (`ID` ASC) VISIBLE, CONSTRAINT `" + username + "SongID` FOREIGN KEY (`" + username + "SongID`) REFERENCES `awesomePlaylist`.`songs` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE)";
+    private String createUserPlaylistSQL() {
+        return "CREATE TABLE IF NOT EXISTS `awesomePlaylist`.`" + userId + "` (`ID` INT NOT NULL AUTO_INCREMENT, `" + userId + "SongID` INT NOT NULL, INDEX `songID_idx` (`" + userId + "SongID` ASC) VISIBLE, INDEX `ID` (`ID` ASC) VISIBLE, CONSTRAINT `" + userId + "SongID` FOREIGN KEY (`" + userId + "SongID`) REFERENCES `awesomePlaylist`.`songs` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE)";
     }
 
     @NotNull
-    private String addSongToUserPlaylistSQL(String username, Integer userChoice) {
-        return "INSERT INTO awesomePlaylist." + username + " VALUES (NULL, " + userChoice + ")";
+    private String addSongToUserPlaylistSQL(Integer userChoice) {
+        return "INSERT INTO awesomePlaylist." + userId + " VALUES (NULL, " + userChoice + ")";
     }
 
     @NotNull
-    private String selectDataFromUserPlaylistSQL(String username) {
-        return "SELECT awesomePlaylist." + username + ".ID, title, artistName, albumName, year FROM awesomePlaylist." + username + " LEFT JOIN awesomePlaylist.songs ON (awesomePlaylist." + username + "." + username + "songID = awesomePlaylist.songs.ID) LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
+    private String selectDataFromUserPlaylistSQL() {
+        return "SELECT awesomePlaylist." + userId + ".ID, title, artistName, albumName, year FROM awesomePlaylist." + userId + " LEFT JOIN awesomePlaylist.songs ON (awesomePlaylist." + userId + "." + userId + "songID = awesomePlaylist.songs.ID) LEFT JOIN awesomePlaylist.artists ON (awesomePlaylist.songs.artistID = awesomePlaylist.artists.ID)";
     }
 
     @NotNull
