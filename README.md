@@ -1,5 +1,6 @@
 # awesomePlaylist
-A really cool playlist creator with an authentication system, the ability to search, add and save the songs you need. 
+<h3>A playlist maker with an authentication system that allows the user to interact with the database where the songs 
+  are stored and add them to personal playlist, which stored in the same database.</h3>
 
 This program is a shaper of playlists with a user authentication system.
 You can register/login, find songs by different indicators and add them to your personal playlist.
