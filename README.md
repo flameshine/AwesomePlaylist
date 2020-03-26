@@ -1,7 +1,7 @@
 # awesomePlaylist
 <h3>A playlist-shaper with a user authentication system that allows the user to interact with the database, where the songs 
 are stored and add them to personal playlist, which stored in the same database.</h3>
-<h3>Overview</h3>
+<h3>Overview:</h3>
 <ul>
 <li><h3>Structure</h3>
 This program consists of a singleton connection pool, a songDatabase that interacts directly with songs, a userDatabase
