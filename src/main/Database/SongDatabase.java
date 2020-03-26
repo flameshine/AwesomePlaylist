@@ -33,7 +33,6 @@ public class SongDatabase {
     }
 
     public void createUserPlaylist(String username) throws SQLException {
-        ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectDataFromRegistrationTable());
         setUser(username);
         createStatement().executeUpdate(createUserPlaylistSQL());
     }
@@ -55,7 +54,7 @@ public class SongDatabase {
         return songs;
     }
 
-    public List<Song> searchSong(String userLine, Integer userChoice) throws SQLException {
+    public List<Song> searchSong(String userLine, @NotNull Integer userChoice) throws SQLException {
         ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectAllDataSQL());
 
         songs.clear();
@@ -106,7 +105,7 @@ public class SongDatabase {
     }
 
     @NotNull
-    private List<Song> setSongList(ResultSet result) throws SQLException {
+    private List<Song> setSongList(@NotNull ResultSet result) throws SQLException {
 
         List<Song> songs = new ArrayList<>();
 

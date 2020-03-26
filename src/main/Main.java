@@ -19,7 +19,6 @@ public class Main {
 
     private void printMainData() {
         congratulationMessage();
-
         printStartMenu();
         System.out.print("Your choice: ");
         enterSomeIntegerValue();
@@ -39,7 +38,6 @@ public class Main {
         boolean play = true;
 
         while(play) {
-
             printMainMenu();
             System.out.print("Your choice: ");
             enterSomeIntegerValue();
@@ -52,7 +50,7 @@ public class Main {
                     printUserPlaylistData();
                     break;
                 case 3:
-                    System.out.println("Good Luck! Your data are saved!");
+                    System.out.println("Your data are saved! Good Luck!");
                     play = false;
                     break;
                 default:
@@ -203,8 +201,7 @@ public class Main {
             exception.printStackTrace();
         }
 
-        System.out.println();
-        System.out.println("The song has been successfully added to your playlist!");
+        System.out.println("\nThe song has been successfully added to your playlist!");
     }
 
     private void congratulationMessage() {
