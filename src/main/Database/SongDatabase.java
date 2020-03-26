@@ -8,24 +8,15 @@ import main.DataClasses.Song;
 
 public class SongDatabase {
 
-    private List<Song> songs = new ArrayList<>();
-
     private final int TITLE = 1;
     private final int ARTIST = 2;
     private final int ALBUM = 3;
     private final int YEAR = 4;
 
-    public List<Song> restoreUserData(ResultSet resultSet) throws SQLException {
-        songs.clear();
-        songs = setSongList(resultSet);
-        return songs;
-    }
-
     public List<Song> searchSong(String userLine, @NotNull Integer userChoice) throws SQLException {
         ResultSet resultSet = ProjectConnectionPool.getInstance().createResultSet(selectAllDataSQL());
 
-        songs.clear();
-        songs = setSongList(resultSet);
+        List<Song> songs = setSongList(resultSet);
 
         switch(userChoice) {
             case TITLE:
@@ -41,22 +32,8 @@ public class SongDatabase {
         }
     }
 
-    public List<Song> addSongToPlaylist(ResultSet resultSet) throws SQLException {
-        putResultToList(resultSet);
-        return songs;
-    }
-
-    private void putResultToList(@NotNull ResultSet resultSet) throws SQLException {
-        songs.clear();
-
-        while(resultSet.next()) {
-            Song song = new Song(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
-            songs.add(song);
-        }
-    }
-
     @NotNull
-    private List<Song> setSongList(@NotNull ResultSet result) throws SQLException {
+    public List<Song> setSongList(@NotNull ResultSet result) throws SQLException {
         List<Song> songs = new ArrayList<>();
 
         while(result.next()) {

@@ -108,7 +108,7 @@ public class Main {
 
             try {
                 if(userDatabase.checkUser(username, password)) {
-                    songs = songDatabase.restoreUserData(userDatabase.restoreUserDataResultSet(username));
+                    songs = songDatabase.setSongList(userDatabase.restoreUserDataResultSet(username));
                     System.out.println("\nAuthorization completed successfully!\n");
                     break;
                 }
@@ -198,7 +198,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.addSongToPlaylist(userDatabase.setListResultSet(userChoice));
+            songs = songDatabase.setSongList(userDatabase.setListResultSet(userChoice));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
