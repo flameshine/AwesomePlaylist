@@ -18,4 +18,7 @@ albumName, year); registration table(userId, username, password), which is creat
 the identifier, name and password of the user; individual playlist table(Id, songId), which is created with the user and
 stores data about those songs that the user added.
 </li>
+<li><h3>Additions</h3>
+In this project I used MySQL database and Stream API.
+</li>
 </ul>
