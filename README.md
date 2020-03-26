@@ -12,7 +12,7 @@ All interactions in the program occur in the console. Every effort was made to m
 possible.
 </li>
 <li><h3>Tools</h3>
-This project was developed in Intellij IDEA using standard Java libraries and their tools. Also involvedMySQL database and 
+This project was developed in Intellij IDEA using standard Java libraries and their tools. Also involved MySQL database and 
 Stream API.
 </li>
 <li><h3>Database</h3>
