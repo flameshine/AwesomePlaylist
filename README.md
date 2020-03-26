@@ -11,6 +11,10 @@ that interacts directly with a user authentication system and, of course, main c
 All interactions in the program occur in the console. Every effort was made to make the interface as user-friendly as 
 possible.
 </li>
+<li><h3>Tools</h3>
+This project was developed in Intellij IDEA using standard Java libraries and their tools. Also involvedMySQL database and 
+Stream API.
+</li>
 <li><h3>Database</h3>
 Consists of: a list of artists, where each artist(artistId, artistName) has his own identifier(artistId) and
 name(artistName); from the list of songs where all the information about the song is stored (songId, title, artistId,
@@ -19,6 +23,6 @@ the identifier, name and password of the user; individual playlist table(Id, son
 stores data about those songs that the user added.
 </li>
 <li><h3>Additions</h3>
-In this project I used MySQL database and Stream API.
+This is my first relatively powerful project, which will serve as a start for more serious professional growth.
 </li>
 </ul>
