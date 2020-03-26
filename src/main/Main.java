@@ -2,15 +2,17 @@ package main;
 
 import java.util.*;
 import java.sql.*;
-import main.DataClasses.Song;
+import main.Database.UserDatabase;
 import main.Database.SongDatabase;
+import main.DataClasses.Song;
 
 public class Main {
 
     private static List<Song> songs = new ArrayList<>();
+    private static UserDatabase userDatabase = new UserDatabase();
     private static SongDatabase songDatabase = new SongDatabase();
     private static String username, password;
-    private static Integer userChoice;
+    private static int userChoice;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -87,8 +89,8 @@ public class Main {
 
     private void addUserToRegistrationTable(String username, String password) {
         try {
-            songDatabase.createRegistrationTable();
-            songDatabase.addUserToRegistrationTable(username, password);
+            userDatabase.createRegistrationTable();
+            userDatabase.addUserToRegistrationTable(username, password);
         } catch (SQLException exception) {
             exception.printStackTrace(System.out);
         }
@@ -105,8 +107,8 @@ public class Main {
             password = input.nextLine();
 
             try {
-                if(songDatabase.checkUser(username, password)) {
-                    songs = songDatabase.restoreUserData(username);
+                if(userDatabase.checkUser(username, password)) {
+                    songs = songDatabase.restoreUserData(userDatabase.restoreUserDataResultSet(username));
                     System.out.println("\nAuthorization completed successfully!\n");
                     break;
                 }
@@ -196,7 +198,7 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.addSongToPlaylist(userChoice);
+            songs = songDatabase.addSongToPlaylist(userDatabase.setListResultSet(userChoice));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -205,7 +207,7 @@ public class Main {
     }
 
     private void congratulationMessage() {
-        System.out.println("Welcome to the awesome playlist! You can easily search and add different songs to your own playlist!");
+        System.out.println("\nWelcome to the awesome playlist! You can easily search and add different songs to your own playlist!");
     }
 
     private void enterSomeIntegerValue() {
