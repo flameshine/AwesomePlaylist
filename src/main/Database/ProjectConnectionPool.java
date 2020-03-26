@@ -6,6 +6,7 @@ import java.util.Objects;
 public class ProjectConnectionPool {
 
     private static ProjectConnectionPool instance = null;
+    private static Connection connection = null;
 
     private static final String
             DRIVER = "com.mysql.jdbc.Driver",
@@ -20,12 +21,13 @@ public class ProjectConnectionPool {
     }
 
     public Connection getConnection() {
-        Connection connection = null;
 
-        try {
-            connection = createConnection();
-        } catch (ClassNotFoundException | SQLException exception) {
-            System.out.println(exception);
+        if(connection == null) {
+            try {
+                connection =  createConnection();
+            } catch (ClassNotFoundException | SQLException exception) {
+                System.out.println(exception);
+            }
         }
 
         return connection;
