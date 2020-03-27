@@ -20,7 +20,7 @@ public class ProjectConnectionPool {
         return instance;
     }
 
-    public Connection getConnection() {
+    public synchronized Connection getConnection() {
 
         if(connection == null) {
             try {
