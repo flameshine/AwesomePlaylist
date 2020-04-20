@@ -24,6 +24,6 @@ stores data about those songs that the user added.
 </li>
 <li><h2>Additions</h2>
 This is my first relatively powerful project, which will serve as a start for more serious professional growth.
-Also I would like to mention my dear friend https://github.com/KostiaLeo who helped me achieve these results.
+Also I'd like to mention my dear friend https://github.com/KostiaLeo who helped me achieve these results.
 </li>
 </ul>
