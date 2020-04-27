@@ -1,4 +1,4 @@
-# awesomePlaylist
+# AwesomePlaylist
 <h3>A playlist-shaper with a user authentication system that allows the user to interact with the database, where the songs 
 are stored and add them to personal playlist, which stored in the same database.</h3>
 <h2>Overview:</h2>
