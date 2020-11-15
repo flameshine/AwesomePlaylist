@@ -1,12 +1,13 @@
-package main.DataClasses;
+package app.model;
 
 public class Song {
 
-    private int id;
-    private String title;
-    private String artistName;
-    private String albumName;
-    private String year;
+    private final int id;
+
+    private final String title;
+    private final String artistName;
+    private final String albumName;
+    private final String year;
 
     public Song(int id, String title, String artistName, String albumName, String year) {
         this.id = id;

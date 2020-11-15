@@ -1,17 +1,23 @@
-package main;
+package app;
 
 import java.util.*;
 import java.sql.*;
-import main.Database.UserDatabase;
-import main.Database.SongDatabase;
-import main.DataClasses.Song;
+
+import app.database.*;
+import app.model.Song;
 
 public class Main {
 
+    private static final Scanner in = new Scanner(System.in);
+
     private static List<Song> songs = new ArrayList<>();
-    private static UserDatabase userDatabase = new UserDatabase();
-    private static SongDatabase songDatabase = new SongDatabase();
-    private static String username, password;
+
+    private static final UserDatabase userDatabase = new UserDatabase();
+    private static final SongDatabase songDatabase = new SongDatabase();
+
+    private static String username;
+    private static String password;
+
     private static int userChoice;
 
     public static void main(String[] args) {
@@ -20,12 +26,17 @@ public class Main {
     }
 
     private void printMainData() {
+
         congratulationMessage();
+
         printStartMenu();
+
         System.out.print("Your choice: ");
+
         enterSomeIntegerValue();
 
-        switch(userChoice) {
+        switch (userChoice) {
+
             case 1:
                 setRegistrationData();
                 break;
@@ -39,12 +50,16 @@ public class Main {
 
         boolean play = true;
 
-        while(play) {
+        while (play) {
+
             printMainMenu();
+
             System.out.print("Your choice: ");
+
             enterSomeIntegerValue();
 
-            switch(userChoice) {
+            switch (userChoice) {
+
                 case 1:
                     searchAndAddSong();
                     break;
@@ -63,16 +78,17 @@ public class Main {
     }
 
     private void setRegistrationData() {
-        Scanner input = new Scanner(System.in);
 
-        while(true) {
+        while (true) {
+
             System.out.println("Please, register your account: ");
+
             System.out.print("Enter your username: ");
-            username = input.nextLine();
+            username = in.nextLine();
             System.out.print("Enter your password: ");
-            String firstPasswordAttempt = input.nextLine();
+            String firstPasswordAttempt = in.nextLine();
             System.out.print("Confirm your password: ");
-            String secondPasswordAttempt = input.nextLine();
+            String secondPasswordAttempt = in.nextLine();
 
             try {
                 if (secondPasswordAttempt.equals(firstPasswordAttempt)) {
@@ -97,14 +113,15 @@ public class Main {
     }
 
     private void setLoginData() {
-        Scanner input = new Scanner(System.in);
 
-        while(true) {
+        while (true) {
+
             System.out.println("Please, log in to your account: ");
+
             System.out.print("Enter your username: ");
-            username = input.nextLine();
+            username = in.nextLine();
             System.out.print("Enter your password: ");
-            password = input.nextLine();
+            password = in.nextLine();
 
             try {
                 if(userDatabase.checkUser(username, password)) {
@@ -145,15 +162,17 @@ public class Main {
     }
 
     private void searchAndAddSong() {
+
         printSearchSongsMenu();
+
         System.out.print("Your choice: ");
+
         enterSomeIntegerValue();
 
-        Scanner input = new Scanner(System.in);
+        while (true) {
 
-        while(true) {
             System.out.print("Please, enter your request: ");
-            String userLine = input.nextLine();
+            String userLine = in.nextLine();
 
             try {
                 songs = songDatabase.searchSong(userLine, userChoice);
@@ -163,11 +182,10 @@ public class Main {
                 System.out.println("Incorrect input!");
             }
 
-            if(!songs.isEmpty()) {
+            if (!songs.isEmpty()) {
                 printResultData();
                 break;
-            }
-            else
+            } else
                 System.out.println("No such song found!");
         }
 
@@ -175,26 +193,31 @@ public class Main {
     }
 
     private void printUserPlaylistData() {
-        if(songs.isEmpty())
+
+        if (songs.isEmpty())
             System.out.println("Your playlist is empty!");
         else
             printResultData();
     }
 
     private void printResultData() {
+
         Iterator<Song> songIterator = songs.iterator();
 
         System.out.println();
         System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
         System.out.println();
 
-        while(songIterator.hasNext())
+        while (songIterator.hasNext())
             songIterator.next().printSong();
     }
 
     private void addSongToUserPlaylist() {
+
         System.out.println();
+
         System.out.print("Please, enter the id of song you want to add: ");
+
         enterSomeIntegerValue();
 
         try {
@@ -211,10 +234,8 @@ public class Main {
     }
 
     private void enterSomeIntegerValue() {
-        Scanner input = new Scanner(System.in);
-
         try {
-            userChoice = input.nextInt();
+            userChoice = in.nextInt();
         } catch (InputMismatchException exception) {
             System.out.println("Mismatch! Restart the program!");
         }

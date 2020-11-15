@@ -1,28 +1,31 @@
-package main.Database;
+package app.database;
 
-import java.sql.*;
 import java.util.Objects;
+import java.sql.*;
 
-public class ProjectConnectionPool {
+public class ConnectionProvider {
 
-    private static ProjectConnectionPool instance = null;
+    private static ConnectionProvider instance = null;
+
     private static Connection connection = null;
 
     private static final String
             DRIVER = "com.mysql.jdbc.Driver",
             URL = "jdbc:mysql://localhost:3306/awesomePlaylist",
             USER = "root",
-            PASSWORD = "toortoor";
+            PASSWORD = "password";
 
-    public static synchronized ProjectConnectionPool getInstance() {
-        if(instance == null)
-            instance = new ProjectConnectionPool();
+    public static synchronized ConnectionProvider getInstance() {
+
+        if (instance == null)
+            instance = new ConnectionProvider();
+
         return instance;
     }
 
     public synchronized Connection getConnection() {
 
-        if(connection == null) {
+        if (connection == null) {
             try {
                 connection =  createConnection();
             } catch (ClassNotFoundException | SQLException exception) {
@@ -38,9 +41,7 @@ public class ProjectConnectionPool {
         return selectedData.executeQuery();
     }
 
-    private ProjectConnectionPool() {
-
-    }
+    private ConnectionProvider() {}
 
     private static Connection createConnection() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER);

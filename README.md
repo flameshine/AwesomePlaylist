@@ -5,7 +5,7 @@ are stored and add them to personal playlist, which stored in the same database.
 <ul>
 <li><h2>Structure</h2>
 This program consists of a singleton connection pool, a songDatabase that interacts directly with songs, a userDatabase
-that interacts directly with a user authentication system and, of course, main class.
+that interacts directly with a user authentication system and, of course, app class.
 </li>
 <li><h2>View</h2>
 All interactions in the program occur in the console. Every effort was made to make the interface as user-friendly as 
