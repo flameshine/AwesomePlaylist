@@ -2,14 +2,14 @@ package app.model;
 
 public class Song {
 
-    private final int id;
+    private final long id;
 
     private final String title;
     private final String artistName;
     private final String albumName;
     private final String year;
 
-    public Song(int id, String title, String artistName, String albumName, String year) {
+    public Song(long id, String title, String artistName, String albumName, String year) {
         this.id = id;
         this.title = title;
         this.artistName = artistName;

@@ -16,16 +16,14 @@ public class Main {
     private static final SongDatabase songDatabase = new SongDatabase();
 
     private static String username;
-    private static String password;
 
     private static int userChoice;
 
-    public static void main(String[] args) {
-        Main main = new Main();
-        main.printMainData();
+    public static void main(String... args) {
+        new Main().execute();
     }
 
-    private void printMainData() {
+    private void execute() {
 
         congratulationMessage();
 
@@ -85,10 +83,12 @@ public class Main {
 
             System.out.print("Enter your username: ");
             username = in.nextLine();
+
             System.out.print("Enter your password: ");
-            String firstPasswordAttempt = in.nextLine();
+            var firstPasswordAttempt = in.nextLine();
+
             System.out.print("Confirm your password: ");
-            String secondPasswordAttempt = in.nextLine();
+            var secondPasswordAttempt = in.nextLine();
 
             try {
                 if (secondPasswordAttempt.equals(firstPasswordAttempt)) {
@@ -120,16 +120,16 @@ public class Main {
 
             System.out.print("Enter your username: ");
             username = in.nextLine();
+
             System.out.print("Enter your password: ");
-            password = in.nextLine();
+            var password = in.nextLine();
 
             try {
-                if(userDatabase.checkUser(username, password)) {
+                if (userDatabase.checkUser(username, password)) {
                     songs = songDatabase.setSongList(userDatabase.restoreUserDataResultSet(username));
                     System.out.println("\nAuthorization completed successfully!\n");
                     break;
-                }
-                else
+                } else
                     System.out.println("\nIncorrect login or password!\n");
             } catch (SQLException exception) {
                 exception.printStackTrace(System.out);
@@ -172,7 +172,7 @@ public class Main {
         while (true) {
 
             System.out.print("Please, enter your request: ");
-            String userLine = in.nextLine();
+            var userLine = in.nextLine();
 
             try {
                 songs = songDatabase.searchSong(userLine, userChoice);
@@ -202,7 +202,7 @@ public class Main {
 
     private void printResultData() {
 
-        Iterator<Song> songIterator = songs.iterator();
+        var songIterator = songs.iterator();
 
         System.out.println();
         System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");

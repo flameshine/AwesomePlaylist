@@ -37,7 +37,7 @@ public class ConnectionProvider {
     }
 
     public ResultSet createResultSet(String source) throws SQLException {
-        PreparedStatement selectedData = Objects.requireNonNull(getConnection()).prepareStatement(source);
+        var selectedData = Objects.requireNonNull(getConnection()).prepareStatement(source);
         return selectedData.executeQuery();
     }
 

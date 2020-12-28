@@ -12,7 +12,7 @@ public class UserDatabase {
 
     public void addUserToRegistrationTable(String username, String password) throws SQLException {
 
-        ResultSet resultSet = ConnectionProvider.getInstance().createResultSet(selectDataFromRegistrationTable());
+        var resultSet = ConnectionProvider.getInstance().createResultSet(selectDataFromRegistrationTable());
 
         while (resultSet.next()) {
 
@@ -27,7 +27,7 @@ public class UserDatabase {
 
     public boolean checkUser(String username, String password) throws SQLException {
         createRegistrationTable();
-        ResultSet resultSet = ConnectionProvider.getInstance().createResultSet(checkUserSQL(username, password));
+        var resultSet = ConnectionProvider.getInstance().createResultSet(checkUserSQL(username, password));
         resultSet.next();
         return resultSet.getBoolean(1);
     }
@@ -49,7 +49,7 @@ public class UserDatabase {
 
     private void setUser(String username) throws SQLException {
 
-        ResultSet resultSet = ConnectionProvider.getInstance().createResultSet(selectDataFromRegistrationTable());
+        var resultSet = ConnectionProvider.getInstance().createResultSet(selectDataFromRegistrationTable());
 
         while (resultSet.next()) {
 

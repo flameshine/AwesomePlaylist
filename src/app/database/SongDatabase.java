@@ -15,9 +15,9 @@ public class SongDatabase {
 
     public List<Song> searchSong(String userLine, Integer userChoice) throws SQLException {
 
-        ResultSet resultSet = ConnectionProvider.getInstance().createResultSet(selectAllDataSQL());
+        var resultSet = ConnectionProvider.getInstance().createResultSet(selectAllDataSQL());
 
-        List<Song> songs = setSongList(resultSet);
+        var songs = setSongList(resultSet);
 
         switch(userChoice) {
 
@@ -36,7 +36,7 @@ public class SongDatabase {
 
     public List<Song> setSongList(ResultSet result) throws SQLException {
 
-        List<Song> songs = new ArrayList<>();
+        var songs = new ArrayList<Song>();
 
         while (result.next())
             songs.add(new Song(result.getInt(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5)));
