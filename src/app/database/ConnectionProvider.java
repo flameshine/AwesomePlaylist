@@ -5,20 +5,21 @@ import java.sql.*;
 
 public class ConnectionProvider {
 
-    private static ConnectionProvider instance = null;
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String URL = "jdbc:mysql://localhost:3306/awesomePlaylist";
+    private static final String USER = "root";
+    private static final String PASSWORD = "password";
 
-    private static Connection connection = null;
+    private static ConnectionProvider instance;
+    private static Connection connection;
 
-    private static final String
-            DRIVER = "com.mysql.jdbc.Driver",
-            URL = "jdbc:mysql://localhost:3306/awesomePlaylist",
-            USER = "root",
-            PASSWORD = "password";
+    private ConnectionProvider() {}
 
     public static synchronized ConnectionProvider getInstance() {
 
-        if (instance == null)
+        if (instance == null) {
             instance = new ConnectionProvider();
+        }
 
         return instance;
     }
@@ -28,8 +29,8 @@ public class ConnectionProvider {
         if (connection == null) {
             try {
                 connection =  createConnection();
-            } catch (ClassNotFoundException | SQLException exception) {
-                System.out.println(exception);
+            } catch (ClassNotFoundException | SQLException e) {
+                throw new RuntimeException("Cannot get database connection via JDBC", e);
             }
         }
 
@@ -37,11 +38,8 @@ public class ConnectionProvider {
     }
 
     public ResultSet createResultSet(String source) throws SQLException {
-        var selectedData = Objects.requireNonNull(getConnection()).prepareStatement(source);
-        return selectedData.executeQuery();
+        return Objects.requireNonNull(getConnection()).prepareStatement(source).executeQuery();
     }
-
-    private ConnectionProvider() {}
 
     private static Connection createConnection() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER);

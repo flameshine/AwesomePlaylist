@@ -1,7 +1,6 @@
 package app.database;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.sql.*;
 
 import app.model.Song;
@@ -15,31 +14,24 @@ public class SongDatabase {
 
     public List<Song> searchSong(String userLine, Integer userChoice) throws SQLException {
 
-        var resultSet = ConnectionProvider.getInstance().createResultSet(selectAllDataSQL());
+        var songs = setSongList(ConnectionProvider.getInstance().createResultSet(selectAllDataSQL()));
 
-        var songs = setSongList(resultSet);
-
-        switch(userChoice) {
-
-            case TITLE:
-                return songs.stream().filter(s -> s.getTitle().contains(userLine)).collect(Collectors.toList());
-            case ARTIST:
-                return songs.stream().filter(s -> s.getArtistName().contains(userLine)).collect(Collectors.toList());
-            case ALBUM:
-                return songs.stream().filter(s -> s.getAlbumName().contains(userLine)).collect(Collectors.toList());
-            case YEAR:
-                return songs.stream().filter(s -> s.getYear().contains(userLine)).collect(Collectors.toList());
-            default:
-                throw new RuntimeException();
-        }
+        return switch (userChoice) {
+            case TITLE -> songs.stream().filter(s -> s.getTitle().contains(userLine)).toList();
+            case ARTIST -> songs.stream().filter(s -> s.getArtistName().contains(userLine)).toList();
+            case ALBUM -> songs.stream().filter(s -> s.getAlbumName().contains(userLine)).toList();
+            case YEAR -> songs.stream().filter(s -> s.getYear().contains(userLine)).toList();
+            default -> throw new RuntimeException("Cannot find song by your criterion");
+        };
     }
 
     public List<Song> setSongList(ResultSet result) throws SQLException {
 
-        var songs = new ArrayList<Song>();
+        List<Song> songs = new ArrayList<>();
 
-        while (result.next())
+        while (result.next()) {
             songs.add(new Song(result.getInt(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5)));
+        }
 
         return songs;
     }

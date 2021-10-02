@@ -8,16 +8,20 @@ import app.model.Song;
 
 public class Main {
 
-    private static final Scanner in = new Scanner(System.in);
+    private static final Scanner SCANNER;
+    private static final UserDatabase USER_DATABASE;
+    private static final SongDatabase SONG_DATABASE;
 
-    private static List<Song> songs = new ArrayList<>();
-
-    private static final UserDatabase userDatabase = new UserDatabase();
-    private static final SongDatabase songDatabase = new SongDatabase();
-
+    private static List<Song> songs;
     private static String username;
-
     private static int userChoice;
+
+    static {
+        SCANNER = new Scanner(System.in);
+        USER_DATABASE = new UserDatabase();
+        SONG_DATABASE = new SongDatabase();
+        songs = new ArrayList<>();
+    }
 
     public static void main(String... args) {
         new Main().execute();
@@ -34,19 +38,12 @@ public class Main {
         enterSomeIntegerValue();
 
         switch (userChoice) {
-
-            case 1:
-                setRegistrationData();
-                break;
-            case 2:
-                setLoginData();
-                break;
-            default:
-                System.out.println("Incorrect input!");
-                break;
+            case 1 -> setRegistrationData();
+            case 2 -> setLoginData();
+            default -> throw new RuntimeException("Incorrect input");
         }
 
-        boolean play = true;
+        var play = true;
 
         while (play) {
 
@@ -58,19 +55,16 @@ public class Main {
 
             switch (userChoice) {
 
-                case 1:
-                    searchAndAddSong();
-                    break;
-                case 2:
-                    printUserPlaylistData();
-                    break;
-                case 3:
+                case 1 -> searchAndAddSong();
+
+                case 2 -> printUserPlaylistData();
+
+                case 3 -> {
                     System.out.println("Your data are saved! Good Luck!");
                     play = false;
-                    break;
-                default:
-                    System.out.println("Incorrect input!");
-                    break;
+                }
+
+                default -> throw new RuntimeException("Incorrect input");
             }
         }
     }
@@ -82,21 +76,22 @@ public class Main {
             System.out.println("Please, register your account: ");
 
             System.out.print("Enter your username: ");
-            username = in.nextLine();
+            username = SCANNER.nextLine();
 
             System.out.print("Enter your password: ");
-            var firstPasswordAttempt = in.nextLine();
+            var firstPasswordAttempt = SCANNER.nextLine();
 
             System.out.print("Confirm your password: ");
-            var secondPasswordAttempt = in.nextLine();
+            var secondPasswordAttempt = SCANNER.nextLine();
 
             try {
                 if (secondPasswordAttempt.equals(firstPasswordAttempt)) {
                     addUserToRegistrationTable(username, firstPasswordAttempt);
                     System.out.println("\nCongratulations, your account has been created successfully!\n");
                     break;
-                } else
+                } else {
                     System.out.println("\nSorry, passwords don't match!\n");
+                }
             } catch (RuntimeException exception) {
                 System.out.println("\nThis username is already exists! Please, choose another one!\n");
             }
@@ -105,10 +100,10 @@ public class Main {
 
     private void addUserToRegistrationTable(String username, String password) {
         try {
-            userDatabase.createRegistrationTable();
-            userDatabase.addUserToRegistrationTable(username, password);
-        } catch (SQLException exception) {
-            exception.printStackTrace(System.out);
+            USER_DATABASE.createRegistrationTable();
+            USER_DATABASE.addUserToRegistrationTable(username, password);
+        } catch (SQLException e) {
+            throw new RuntimeException("An unexpected error occurred during the database operations", e);
         }
     }
 
@@ -119,20 +114,21 @@ public class Main {
             System.out.println("Please, log in to your account: ");
 
             System.out.print("Enter your username: ");
-            username = in.nextLine();
+            username = SCANNER.nextLine();
 
             System.out.print("Enter your password: ");
-            var password = in.nextLine();
+            var password = SCANNER.nextLine();
 
             try {
-                if (userDatabase.checkUser(username, password)) {
-                    songs = songDatabase.setSongList(userDatabase.restoreUserDataResultSet(username));
+                if (USER_DATABASE.checkUser(username, password)) {
+                    songs = SONG_DATABASE.setSongList(USER_DATABASE.restoreUserDataResultSet(username));
                     System.out.println("\nAuthorization completed successfully!\n");
                     break;
-                } else
+                } else {
                     System.out.println("\nIncorrect login or password!\n");
-            } catch (SQLException exception) {
-                exception.printStackTrace(System.out);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("An unexpected error occurred during the database operations", e);
             }
         }
     }
@@ -172,21 +168,20 @@ public class Main {
         while (true) {
 
             System.out.print("Please, enter your request: ");
-            var userLine = in.nextLine();
+            var userLine = SCANNER.nextLine();
 
             try {
-                songs = songDatabase.searchSong(userLine, userChoice);
-            } catch (SQLException exception) {
-                exception.printStackTrace(System.out);
-            } catch (RuntimeException exception) {
-                System.out.println("Incorrect input!");
+                songs = SONG_DATABASE.searchSong(userLine, userChoice);
+            } catch (SQLException e) {
+                throw new RuntimeException("An unexpected error occurred during some database operations", e);
             }
 
             if (!songs.isEmpty()) {
                 printResultData();
                 break;
-            } else
+            } else {
                 System.out.println("No such song found!");
+            }
         }
 
         addSongToUserPlaylist();
@@ -194,10 +189,11 @@ public class Main {
 
     private void printUserPlaylistData() {
 
-        if (songs.isEmpty())
+        if (songs.isEmpty()) {
             System.out.println("Your playlist is empty!");
-        else
+        } else {
             printResultData();
+        }
     }
 
     private void printResultData() {
@@ -208,8 +204,9 @@ public class Main {
         System.out.printf("%-5s %-25s %-25s %-25s %-25s", "Id:", "Title:", "Artist:", "Album:", "Year:");
         System.out.println();
 
-        while (songIterator.hasNext())
-            songIterator.next().printSong();
+        while (songIterator.hasNext()) {
+            System.out.println(songIterator.next());
+        }
     }
 
     private void addSongToUserPlaylist() {
@@ -221,9 +218,9 @@ public class Main {
         enterSomeIntegerValue();
 
         try {
-            songs = songDatabase.setSongList(userDatabase.setListResultSet(userChoice));
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+            songs = SONG_DATABASE.setSongList(USER_DATABASE.setListResultSet(userChoice));
+        } catch (SQLException e) {
+            throw new RuntimeException("An unexpected error occurred during the database operations", e);
         }
 
         System.out.println("\nThe song has been successfully added to your playlist!");
@@ -235,9 +232,9 @@ public class Main {
 
     private void enterSomeIntegerValue() {
         try {
-            userChoice = in.nextInt();
-        } catch (InputMismatchException exception) {
-            System.out.println("Mismatch! Restart the program!");
+            userChoice = SCANNER.nextInt();
+        } catch (InputMismatchException e) {
+            throw new RuntimeException("Incorrect input", e);
         }
     }
 }
