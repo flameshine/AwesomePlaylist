@@ -1,10 +1,10 @@
 # AwesomePlaylist
-<h3>A playlist-shaper with a user authentication system that allows the user to interact with the database, where the songs 
-are stored and add them to personal playlist, which stored in the same database.</h3>
+<h3>A playlist-shaper with the user authentication system that allows the user to interact with the database, where the songs 
+are stored and add them to a personal playlist, which stored in the same database.</h3>
 <h2>Overview:</h2>
 <ul>
 <li><h2>Structure</h2>
-This program consists of a singleton connection pool, a songDatabase that interacts directly with songs, a userDatabase
+This program consists of the connection pool implemented using the singleton pattern, a songDatabase that interacts directly with songs, a userDatabase
 that interacts directly with a user authentication system and, of course, app class.
 </li>
 <li><h2>View</h2>
@@ -23,7 +23,7 @@ the identifier, name and password of the user; individual playlist table(Id, son
 stores data about those songs that the user added.
 </li>
 <li><h2>Additions</h2>
-This is my first relatively powerful project, which will serve as a start for more serious professional growth.
+This is my first relatively large-scale project, which will serve as a start for more serious professional growth.
 Also I'd like to mention my dear friend https://github.com/KostiaLeo who helped me achieve these results.
 </li>
 </ul>
